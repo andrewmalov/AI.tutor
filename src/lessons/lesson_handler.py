@@ -146,15 +146,24 @@ async def send_question(message: Message, state: FSMContext):
     
     question = questions[current_idx]
     
-    # Create keyboard with options
+    # Create keyboard with letter options (A, B, C, D)
     builder = InlineKeyboardBuilder()
-    for i, option in enumerate(question["options"]):
-        builder.button(text=option, callback_data=f"option_{i}")
+    letters = ['A', 'B', 'C', 'D']
+    for i, _ in enumerate(question["options"]):
+        if i < len(letters):
+            builder.button(text=letters[i], callback_data=f"option_{i}")
     
-    # Send question
+    # Format options with letters
+    options_text = ""
+    for i, option in enumerate(question["options"]):
+        if i < len(letters):
+            options_text += f"{letters[i]}. {option}\n"
+    
+    # Send question with options in the message
     await message.answer(
         f"Вопрос {current_idx + 1} из {len(questions)}:\n\n"
-        f"{question['text']}",
+        f"{question['text']}\n\n"
+        f"{options_text}",
         reply_markup=builder.as_markup()
     )
 
@@ -187,11 +196,14 @@ async def process_practice_answer(callback: CallbackQuery, state: FSMContext):
     await state.update_data(data)
     
     # Send feedback
+    letters = ['A', 'B', 'C', 'D']
     if is_correct:
         await callback.message.answer("✅ Правильно!")
     else:
-        correct_option = question["options"][question["correct_index"]]
-        await callback.message.answer(f"❌ Неправильно. Правильный ответ: {correct_option}")
+        correct_idx = question["correct_index"]
+        correct_letter = letters[correct_idx] if correct_idx < len(letters) else ""
+        correct_option = question["options"][correct_idx]
+        await callback.message.answer(f"❌ Неправильно. Правильный ответ: {correct_letter}. {correct_option}")
     
     # Send the next question
     await send_question(callback.message, state)

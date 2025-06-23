@@ -14,7 +14,7 @@ Telegram-бот для обучения Python с геймификацией и 
 
 1. Клонируйте репозиторий:
    ```
-   git clone https://github.com/yourusername/python-tutor-bot.git
+   git clone [https://github.com/yourusername/python-tutor-bot.git](https://github.com/andrewmalov/AI.tutor.git)
    cd python-tutor-bot
    ```
 

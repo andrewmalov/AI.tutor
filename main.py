@@ -9,6 +9,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.types import Message
+from aiogram.client.default import DefaultBotProperties
 
 from src.database.db import init_db
 from src.lessons.test_handler import router as test_router
@@ -22,7 +23,7 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
 # Initialize bot and dispatcher
-bot = Bot(token=os.getenv("BOT_TOKEN"))
+bot = Bot(token=os.getenv("BOT_TOKEN"), default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher()
 
 # Register routers
@@ -107,7 +108,7 @@ async def main() -> None:
     await init_db()
     
     # Initialize Bot instance with a default parse mode which will be passed to all API calls
-    bot_instance = Bot(token=os.getenv("BOT_TOKEN"), parse_mode=ParseMode.HTML)
+    bot_instance = Bot(token=os.getenv("BOT_TOKEN"), default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     
     # Start polling
     await dp.start_polling(bot_instance)
